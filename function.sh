@@ -18,3 +18,11 @@ function createSrmUser {
   useradd -m srm -g srm -u 3999 -d /home/srm -G users -c "srm application user" -s /bin/bash -p $SRM_PASS || echo "Failed to create srm user"
   echo "Function-END"
 }
+
+function setTimezoneToAustralia {
+  echo "[DEBUG MESSAGE]:  Setting Timezone to local Australian city via softlink"
+  ln -sf /usr/share/zoneinfo/Australia/$TZ_PATH /etc/localtime || echo "Failed to symlink $TZ_PATH timezone to /etc/localtime"
+  echo '''export TZ=Australia/TZ_PATH''' | sed "s/TZ_PATH/$TZ_PATH/g" >> /home/srm/.bashrc || echo "Failed include TZ variable in inform bashrc"
+  echo '''export TZ=Australia/TZ_PATH''' | sed "s/TZ_PATH/$TZ_PATH/g" >> /etc/profile || echo "Failed include TZ variable in general profile"
+  echo "Function-END"
+}
